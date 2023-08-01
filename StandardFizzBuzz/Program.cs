@@ -5,7 +5,7 @@ class Program
 {
     static void Main()
     {
-        // This is the Standar FizzBuzz problem
+        // This is the Standar FizzBuzz problem 1-100
         int start = 1;
         int end = 100;
 

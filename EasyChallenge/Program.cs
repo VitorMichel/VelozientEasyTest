@@ -19,9 +19,7 @@ class Program
         int[] numbers = { };
         int index = Convert.ToInt32(Console.ReadLine());
         foreach (var i in index)
-        {
-
-        }
+            index[i] = Console.ReadLine();
 
         string fizzBuzzOutput2 = TwistedFizzBuzzGenerator.GenerateNonSequentialOutput(numbers);
         Console.WriteLine(fizzBuzzOutput2);
@@ -36,7 +34,6 @@ class Program
 
         //Example 4: Using API generated tokens
         string apiURL = "https://rich-red-cocoon-veil.cyclic.app/random";
-        //Task fizzBuzzOutput4 = TwistedFizzBuzzGenerator.GenerateOutputFromAPI(apiURL);
-        //Console.WriteLine(fizzBuzzOutput4);
+        TwistedFizzBuzzGenerator.GenerateOutputFromAPI(apiURL);
     }
 }

@@ -8,15 +8,15 @@ namespace TwistedFizzBuzz
 {
     public class TwistedFizzBuzzGenerator
     {
-        private static readonly string defaultFizzToken = "Fizz";
-        private static readonly string defaultBuzzToken = "Buzz";
-        private static readonly int defaultFizzDivisor = 3;
-        private static readonly int defaultBuzzDivisor = 5;
+        private readonly string defaultFizzToken = "Fizz";
+        private readonly string defaultBuzzToken = "Buzz";
+        private readonly int defaultFizzDivisor = 3;
+        private readonly int defaultBuzzDivisor = 5;
 
         public static string GenerateSequentialOutput(int start, int end, string fizzToken = null, string buzzToken = null, int fizzDivisor = 0, int buzzDivisor = 0)
         {
-            fizzToken ??= defaultFizzToken;
-            buzzToken ??= defaultBuzzToken;
+            fizzToken ?? defaultFizzToken;
+            buzzToken ?? defaultBuzzToken;
             fizzDivisor = fizzDivisor != 0 ? fizzDivisor : defaultFizzDivisor;
             buzzDivisor = buzzDivisor != 0 ? buzzDivisor : defaultBuzzDivisor;
 
@@ -55,8 +55,8 @@ namespace TwistedFizzBuzz
 
         public static string GenerateNonSequentialOutput(IEnumerable<int> numbers, string fizzToken = null, string buzzToken = null, int fizzDivisor = 0, int buzzDivisor = 0)
         {
-            fizzToken ??= defaultFizzToken;
-            buzzToken ??= defaultBuzzToken;
+            fizzToken ?? defaultFizzToken;
+            buzzToken ?? defaultBuzzToken;
             fizzDivisor = fizzDivisor != 0 ? fizzDivisor : defaultFizzDivisor;
             buzzDivisor = buzzDivisor != 0 ? buzzDivisor : defaultBuzzDivisor;
 
@@ -91,25 +91,22 @@ namespace TwistedFizzBuzz
         // Method for accepting API generated tokens from a URL
         public async Task GenerateOutputFromAPI(string apiURL)
         {
-            using (HttpClient httpClient = new HttpClient())
+            using HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync(apiURL);
+
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await httpClient.GetAsync(apiURL);
+                string responseContent = await response.Content.ReadAsStringAsync();
 
-                if (response.IsSuccessStatusCode)
-                {
-                    //The request was successful, read the content as a string
-                    string responseContent = await response.Content.ReadAsStringAsync();
+                dynamic data = JObject.Parse(responseContent);
 
-                    dynamic data = JObject.Parse(responseContent);
+                var multiple = data.multiple.Value;
+                var word = data.word.Value;
 
-                    var multiple = data.multiple.Value;
-                    var word = data.word.Value;
-
-                    GenerateSequentialOutput(1, 50, word, "", multiple, 0);
-                }
-                else
-                    Console.WriteLine($"Request failed with status code: {response.StatusCode}");
+                var str = GenerateSequentialOutput(1, 50, word, "", multiple, 0);
             }
+            else
+                Console.WriteLine($"Request failed with status code: {response.StatusCode}");
         }
 
         public static string StandarFizzBuzz(int start, int end)
@@ -174,8 +171,6 @@ namespace TwistedFizzBuzz
             }
 
             return output;
-
-
         }
     }
 }
