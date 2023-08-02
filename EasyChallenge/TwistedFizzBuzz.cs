@@ -8,15 +8,15 @@ namespace TwistedFizzBuzz
 {
     public class TwistedFizzBuzzGenerator
     {
-        private readonly string defaultFizzToken = "Fizz";
-        private readonly string defaultBuzzToken = "Buzz";
-        private readonly int defaultFizzDivisor = 3;
-        private readonly int defaultBuzzDivisor = 5;
+        private static readonly string defaultFizzToken = "Fizz";
+        private static readonly string defaultBuzzToken = "Buzz";
+        private static readonly int defaultFizzDivisor = 3;
+        private static readonly int defaultBuzzDivisor = 5;
 
         public static string GenerateSequentialOutput(int start, int end, string fizzToken = null, string buzzToken = null, int fizzDivisor = 0, int buzzDivisor = 0)
         {
-            fizzToken ?? defaultFizzToken;
-            buzzToken ?? defaultBuzzToken;
+            fizzToken ??= defaultFizzToken;
+            buzzToken ??= defaultBuzzToken;
             fizzDivisor = fizzDivisor != 0 ? fizzDivisor : defaultFizzDivisor;
             buzzDivisor = buzzDivisor != 0 ? buzzDivisor : defaultBuzzDivisor;
 
@@ -53,10 +53,10 @@ namespace TwistedFizzBuzz
             return output;
         }
 
-        public static string GenerateNonSequentialOutput(IEnumerable<int> numbers, string fizzToken = null, string buzzToken = null, int fizzDivisor = 0, int buzzDivisor = 0)
+        public static string GenerateNonSequentialOutput(List<int> numbers, string fizzToken = null, string buzzToken = null, int fizzDivisor = 0, int buzzDivisor = 0)
         {
-            fizzToken ?? defaultFizzToken;
-            buzzToken ?? defaultBuzzToken;
+            fizzToken ??= defaultFizzToken;
+            buzzToken ??= defaultBuzzToken;
             fizzDivisor = fizzDivisor != 0 ? fizzDivisor : defaultFizzDivisor;
             buzzDivisor = buzzDivisor != 0 ? buzzDivisor : defaultBuzzDivisor;
 
@@ -89,7 +89,7 @@ namespace TwistedFizzBuzz
         }
 
         // Method for accepting API generated tokens from a URL
-        public async Task GenerateOutputFromAPI(string apiURL)
+        public async Task<string> GenerateOutputFromAPI(string apiURL)
         {
             using HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = await httpClient.GetAsync(apiURL);
@@ -100,13 +100,15 @@ namespace TwistedFizzBuzz
 
                 dynamic data = JObject.Parse(responseContent);
 
-                var multiple = data.multiple.Value;
-                var word = data.word.Value;
+                int multiple = (int)data.multiple.Value;
+                string word = data.word.Value;
 
-                var str = GenerateSequentialOutput(1, 50, word, "", multiple, 0);
+                return GenerateSequentialOutput(1, 50, word, "", multiple, 0);
             }
             else
-                Console.WriteLine($"Request failed with status code: {response.StatusCode}");
+            {
+                return $"Request failed with status code: {response.StatusCode}";
+            }
         }
 
         public static string StandarFizzBuzz(int start, int end)
@@ -152,17 +154,17 @@ namespace TwistedFizzBuzz
 
             for (int i = start; i <= end; i++)
             {
-                if (i % 5 == 0)
+                if (i % 27 == 0)
+                {
+                    output += "Bar\n";
+                }
+                else if (i % 5 == 0)
                 {
                     output += "Fizz\n";
                 }
                 else if (i % 9 == 0)
                 {
                     output += "Buzz\n";
-                }
-                else if (i % 27 == 0)
-                {
-                    output += "Bar\n";
                 }
                 else
                 {
